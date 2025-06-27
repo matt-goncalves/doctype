@@ -1,0 +1,95 @@
+<!-- ========= Parameter Entities ========= -->
+
+<!ENTITY % block "par | list | code-block | image | block | section | table">
+<!ENTITY % inline "code | emphasis | link | foreign | date | inline">
+
+<!-- ========= Root Element ========= -->
+
+<!ELEMENT document (head, body)>
+  
+<!-- ========= Head ========= -->
+
+<!ELEMENT head (title, meta*)>
+<!ELEMENT title (#PCDATA)>
+<!ELEMENT meta EMPTY>
+<!ATTLIST meta
+  name    CDATA   #REQUIRED
+  content CDATA   #REQUIRED
+>
+
+<!-- ========= Body ========= -->
+
+<!ELEMENT body (%block;)*>
+
+<!-- ========= Paragraph ========= -->
+
+<!ELEMENT par (#PCDATA | %inline;)*>  <!-- regular paragraph -->
+<!ATTLIST par
+  type CDATA #IMPLIED>
+
+<!-- ========= Block Elements ====== -->
+
+<!-- generic block -->
+<!ELEMENT block (#PCDATA | %inline; | %block;)*>
+<!ATTLIST block
+  type CDATA #REQUIRED>
+
+<!-- code-block -->
+<!ELEMENT code-block (#PCDATA)>
+<!ATTLIST code-block
+  xml:space (default | preserve) "preserve"
+  lang CDATA #IMPLIED>
+
+<!-- image -->
+<!ELEMENT image EMPTY>
+<!ATTLIST image
+  src CDATA #REQUIRED
+  alt CDATA #IMPLIED>
+
+<!-- ========= Section ========= -->
+
+<!ELEMENT section (title, (%block;))>
+
+<!-- ========= List and Items ========= -->
+
+<!ELEMENT list (item+)>
+<!ATTLIST list
+  type (enum | bullet) #IMPLIED
+>
+
+<!ELEMENT item (#PCDATA | %inline;)*>
+
+<!-- ========= Inline Element ========= -->
+
+<!-- inline code -->
+<!ELEMENT code (#PCDATA)> <!-- inline code -->
+
+<!-- emphasis with type to define bold, italic, etc. -->
+<!ELEMENT emph (#PCDATA)>
+<!ATTLIST emph
+  style (b | i | u | m) #IMPLIED>
+
+<!-- link element -->
+<!ELEMENT link (#PCDATA)>
+<!ATTLIST link to CDATA #REQUIRED>
+
+<!-- foreign term + language -->
+<!ELEMENT foreign (#PCDATA)>
+<!ATTLIST foreign lang CDATA #IMPLIED>
+
+<!-- inline date element -->
+<!ELEMENT date (#PCDATA)>
+
+<!-- generic inline element + type -->
+<!ELEMENT inline (#PCDATA)>
+<!ATTLIST inline type CDATA #REQUIRED>
+
+<!-- ========= Table ========= -->
+<!ELEMENT table (row+)>
+<!ELEMENT thead (cell+)> <!-- for table headers -->
+<!ELEMENT row (cell+)>
+<!ELEMENT cell (#PCDATA | %inline;)*>
+<!ATTLIST table title CDATA #IMPLIED>
+
+
+<!-- ======== EOF ======= -->
