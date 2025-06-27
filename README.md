@@ -1,10 +1,4 @@
----
-title: My Custom Document Definition and Handlers
-author: Adam Prescott
-date: 2025-06-27T14:48:18-0300
-keywords: readme file, doctype, document handling, organization, standards
-version: 1.0
----
+# DOCTYPE
 
 This directory holds the stylesheets and handlers for my new document format. 
 It's part of my new standard, and will be used extensively. Keep the directory 
