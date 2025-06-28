@@ -1,11 +1,12 @@
 <!-- ========= Parameter Entities ========= -->
 
 <!ENTITY % block "par | list | code-block | image | block | section | table">
-<!ENTITY % inline "code | emphasis | link | foreign | date | inline">
+<!ENTITY % inline "code | emph | link | foreign | date | inline">
 
 <!-- ========= Root Element ========= -->
 
 <!ELEMENT document (head, body)>
+<!ATTLIST document xmlns:xi CDATA #IMPLIED>
   
 <!-- ========= Head ========= -->
 
@@ -48,16 +49,17 @@
 
 <!-- ========= Section ========= -->
 
-<!ELEMENT section (title, (%block;))>
+<!ELEMENT section (title, (%block;)*)>
+<!ATTLIST xmlns:xi CDATA #IMPLIED>
 
 <!-- ========= List and Items ========= -->
 
-<!ELEMENT list (item+)>
+<!ELEMENT list (item)*>
 <!ATTLIST list
   type (enum | bullet) #IMPLIED
 >
 
-<!ELEMENT item (#PCDATA | %inline;)*>
+<!ELEMENT item (#PCDATA | %inline; | list)*>
 
 <!-- ========= Inline Element ========= -->
 
