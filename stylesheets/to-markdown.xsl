@@ -23,8 +23,9 @@
   <!-- Title to YAML -->
   <xsl:template match="title">
     <xsl:text>title: </xsl:text>
+    <xsl:text>"</xsl:text>
     <xsl:value-of select="normalize-space(.)"/>
-    <xsl:text>
+    <xsl:text>"
 </xsl:text>
   </xsl:template>
 
@@ -32,8 +33,9 @@
   <xsl:template match="meta">
     <xsl:value-of select="normalize-space(@name)"/>
     <xsl:text>: </xsl:text>
+    <xsl:text>"</xsl:text>
     <xsl:value-of select="normalize-space(@content)"/>
-    <xsl:text>
+    <xsl:text>"
 </xsl:text>
   </xsl:template>
 

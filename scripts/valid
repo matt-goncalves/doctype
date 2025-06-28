@@ -1,0 +1,14 @@
+#!/usr/bin/enb bash
+
+# === schemas and dtd === #
+META_DTD="$HOME"/.doctype/dtd/document.dtd
+
+# Validates against dtd
+valid()
+{
+  for file in "$@"; do
+    xmllint --dtdvalid "$META_DTD" "$file" --noout && \
+      echo "Document validates."
+  done
+}
+

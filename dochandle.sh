@@ -1,4 +1,4 @@
-#!/usr/bin/enb bash
+#!/usr/bin/env bash
 
 # === Documentation ===
 #
@@ -12,36 +12,6 @@
 #
 # === ===
 
-DOCDIR="$HOME"/.doctype
-
-# === stylesheets === #
-TOMD_XSL="$DOCDIR"/stylesheets/to-markdown.xsl
-META_XSL="$DOCDIR"/stylesheets/meta.xsl
-
-# === schemas and dtd === #
-META_DTD="$DOCDIR"/dtd/document.dtd
-
-
-# Extracts metadata as YML
-meta()
-{
-  for file in "$@"; do
-     xsltproc "$META_XSL" "$file"
-  done
-}
-
-# Validates against dtd
-valid()
-{
-  for file in "$@"; do
-    xmllint --dtdvalid "$META_DTD" "$file" --noout && \
-      echo "Document validates."
-  done
-}
-
-to-md()
-{
-  for file in "$@"; do
-      xsltproc "$TOMD_XSL" "$file"
-  done
-}
+. "$HOME"/.doctype/scripts/to-md # Converts markup to markdown
+. "$HOME"/.doctype/scripts/valid # Validates against DTD
+. "$HOME"/.doctype/scripts/meta  # Extracts metadata as YML

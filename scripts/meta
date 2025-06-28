@@ -1,0 +1,13 @@
+#!/usr/bin/enb bash
+
+META_XSL="$HOME"/.doctype/stylesheets/meta.xsl
+
+# Extracts metadata as YML
+meta()
+{
+  for file in "$@"; do
+     xsltproc "$META_XSL" "$file"
+  done
+}
+
+

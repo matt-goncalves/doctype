@@ -1,0 +1,12 @@
+#!/usr/bin/enb bash
+
+TOMD_XSL="$HOME"/.doctype/stylesheets/to-markdown.xsl
+
+to-md()
+{
+  for file in "$@"; do
+      xsltproc "$TOMD_XSL" "$file"
+  done
+}
+
+
