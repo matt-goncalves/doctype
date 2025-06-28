@@ -88,7 +88,7 @@
   <xsl:template match="code-block">
     <xsl:text>
 ```</xsl:text>
-    <xsl:value-of select="@lang"/>
+    <xsl:value-of select="@lang" disable-output-escaping="yes"/>
     <xsl:text>
 </xsl:text>
     <xsl:value-of select="."/>
@@ -121,8 +121,8 @@
   <!-- Inline elements -->
   <xsl:template match="code">
     <xsl:text>`</xsl:text>
-    <xsl:value-of select="."/>
-    <xsl:text>`</xsl:text>
+    <xsl:value-of select="." disable-output-escaping="yes" />
+    <xsl:text>` </xsl:text>
   </xsl:template>
 
   <xsl:template match="emphasis">
