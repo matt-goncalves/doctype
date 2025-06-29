@@ -19,3 +19,9 @@ SCRIPTS_PATH="$HOME"/.doctype/scripts
 . "$SCRIPTS_PATH"/valid    # Validates against DTD
 . "$SCRIPTS_PATH"/meta     # Extracts metadata as YML
 . "$SCRIPTS_PATH"/prev     # Previews document - Firefox
+
+# === NodeJS-based Scripts (callers) === #
+smarten()
+{
+  node "$SCRIPTS_PATH"/smarten/index.js # Smartens quotes and such
+}
