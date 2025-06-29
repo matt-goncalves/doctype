@@ -12,6 +12,10 @@
 #
 # === ===
 
-. "$HOME"/.doctype/scripts/to-md # Converts markup to markdown
-. "$HOME"/.doctype/scripts/valid # Validates against DTD
-. "$HOME"/.doctype/scripts/meta  # Extracts metadata as YML
+SCRIPTS_PATH="$HOME"/.doctype/scripts
+
+. "$SCRIPTS_PATH"/to-md    # Converts markup to markdown through XSL
+. "$SCRIPTS_PATH"/to-xhtml # Converts markup to XHTML through XSL
+. "$SCRIPTS_PATH"/valid    # Validates against DTD
+. "$SCRIPTS_PATH"/meta     # Extracts metadata as YML
+. "$SCRIPTS_PATH"/prev     # Previews document - Firefox

@@ -1,12 +1,14 @@
-#!/usr/bin/enb bash
+#!/usr/bin/env bash
 
-TOMD_XSL="$HOME"/.doctype/stylesheets/to-markdown.xsl
+TOMD_XSL="$HOME/.doctype/stylesheets/to-markdown.xsl"
 
-to-md()
-{
-  for file in "$@"; do
+to-md() {
+  if [ "$#" -eq 0 ]; then
+    # No arguments, read from stdin
+    xsltproc "$TOMD_XSL" -
+  else
+    for file in "$@"; do
       xsltproc "$TOMD_XSL" "$file"
-  done
+    done
+  fi
 }
-
-

@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+TOXHTML_XSL="$HOME/.doctype/stylesheets/to-xhtml.xsl"
+
+to-xhtml()
+{
+  if [ "$#" -eq 0 ]; then
+    xsltproc "$TOXHTML_XSL" -
+  else
+    for file in "$@"; do
+      xsltproc "$TOXHTML_XSL" "$file"
+    done
+  fi
+}

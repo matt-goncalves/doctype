@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+. "$HOME"/.doctype/scripts/to-md
+
+prev()
+{
+  for file in "$@"; do
+
+    # Save temp file
+    tmpfile=$(mktemp).html
+
+    # Run Include and format to Markdown
+    cat "$file" |\
+      xmllint --xinclude - |\
+      to-xhtml > "$tmpfile"
+
+    # Open with browser
+    (firefox "$tmpfile") & disown
+
+  done
+}
