@@ -6,9 +6,14 @@ META_DTD="$HOME"/.doctype/dtd/document.dtd
 # Validates against dtd
 valid()
 {
-  for file in "$@"; do
-    xmllint --dtdvalid "$META_DTD" "$file" --noout && \
+  if [ "$#" -eq 0 ]; then
+    xmllint --dtdvalid "$META_DTD" --noout - && \
       echo "Document validates."
-  done
+  else
+    for file in "$@"; do
+      xmllint --dtdvalid "$META_DTD" "$file" --noout && \
+        echo "Document validates."
+    done
+  fi
 }
 

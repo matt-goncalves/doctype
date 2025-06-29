@@ -50,7 +50,7 @@
 <!-- ========= Section ========= -->
 
 <!ELEMENT section (title, (%block;)*)>
-<!ATTLIST xmlns:xi CDATA #IMPLIED>
+<!ATTLIST section xmlns:xi CDATA #IMPLIED>
 
 <!-- ========= List and Items ========= -->
 
