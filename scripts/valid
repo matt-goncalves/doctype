@@ -1,4 +1,4 @@
-#!/usr/bin/enb bash
+#!/usr/bin/env bash
 
 # === schemas and dtd === #
 META_DTD="$HOME"/.doctype/dtd/document.dtd
