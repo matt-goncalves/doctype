@@ -4,18 +4,27 @@
 
 prev()
 {
-  for file in "$@"; do
-
+  if [ "$#" -eq 0 ]; then
     # Save temp file
     tmpfile=$(mktemp).html
 
     # Run Include and format to Markdown
-    cat "$file" |\
-      xmllint --xinclude - |\
+    xmllint --xinclude - |\
       to-xhtml > "$tmpfile"
 
     # Open with browser
     (firefox "$tmpfile") & disown
+  else
+    for file in "$@"; do
+      # Save temp file
+      tmpfile=$(mktemp).html
 
-  done
+      # Run Include and format to Markdown
+      xmllint --xinclude "$file" |\
+        to-xhtml > "$tmpfile"
+
+      # Open with browser
+      (firefox "$tmpfile") & disown
+    done
+  fi
 }

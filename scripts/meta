@@ -5,9 +5,13 @@ META_XSL="$HOME"/.doctype/stylesheets/meta.xsl
 # Extracts metadata as YML
 meta()
 {
-  for file in "$@"; do
-     xsltproc "$META_XSL" "$file"
-  done
+  if [ "$#" -eq 0 ]; then
+     xsltproc "$META_XSL" -
+  else
+    for file in "$@"; do
+       xsltproc "$META_XSL" "$file"
+    done
+  fi
 }
 
 
