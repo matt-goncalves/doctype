@@ -17,8 +17,8 @@ STYLESHEETS="$HOME/.doctype/stylesheets"
 
 TO_META="$STYLESHEETS/to-epub/to-metadata-modular.xsl"
 TO_TOC="$STYLESHEETS/to-epub/to-toc.xsl"
-TO_XHTML="$STYLESHEETS/to-epub/to-xhtml.xsl"
 TO_XHTMLCHAPTER="$STYLESHEETS/to-epub/sect-to-xhtml.xsl"
+TO_COVERPAGE="$STYLESHEETS/to-epub/to-coverpage.xsl"
 
 MIMETYPE_TEXT="application/epub+zip"
 
@@ -62,11 +62,6 @@ to-epub()
     # Temp dir to process it
     tempdir=$(mktemp -d)
 
-    # --- update
-
-    # Generate text body
-    xsltproc "$TO_XHTML" "$file" > "$tempdir/content.xhtml"
-
     # Extract number of sections
     count=$(xmllint --xpath 'count(//section)' "$file")
 
@@ -79,13 +74,14 @@ to-epub()
       xsltproc "$TO_XHTMLCHAPTER" "$tempdir/_section_${i}.xml" > "$tempdir/section-${i}.xhtml"
     done
 
-    # --- end update
-
     # Generate TOC
     xsltproc "$TO_TOC" "$file" > "$tempdir/toc.xhtml"
 
     # Generate metadata
     xsltproc "$TO_META" "$file" > "$tempdir/content.opf"
+
+    # Generate coverpage
+    xsltproc "$TO_COVERPAGE" "$file" > "$tempdir"/cover-page.xhtml || echo "Creating coverpage failed."
 
     # Create book directory
     bookdir="${tempdir}/${book_title}"
@@ -98,7 +94,6 @@ to-epub()
 
     # Move files to the right places
     mv -v "$tempdir"/*.xhtml "$bookdir"/OEBPS
-    mv -v "$tempdir/toc.xhtml" "$bookdir"/OEBPS
     mv -v "$tempdir/content.opf" "$bookdir"/OEBPS
 
     # Create CSS file

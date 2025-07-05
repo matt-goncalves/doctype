@@ -21,10 +21,21 @@
       </docTitle>
 
       <navMap>
+
+        <!-- hard-coded insert of the cover-page file -->
+        <navPoint id="cover" playOrder="0">
+          <navLabel>
+            <text>Cover</text>
+          </navLabel>
+          <content src="cover-page.xhtml"/>
+        </navPoint>
+
+        <!-- dynamic insertion of chapters -->
         <xsl:apply-templates select="body/section">
           <xsl:with-param name="level" select="1"/>
           <xsl:with-param name="playOrder" select="1"/>
         </xsl:apply-templates>
+
       </navMap>
     </ncx>
   </xsl:template>
