@@ -29,15 +29,29 @@
       </metadata>
 
       <manifest>
-        <item id="content" href="content.xhtml" media-type="application/xhtml+xml"/>
+        <!-- Static files -->
         <item id="toc" href="toc.xhtml" media-type="application/xhtml+xml" properties="nav"/>
         <item id="ncx" href="toc.ncx" media-type="application/x-dtbncx+xml"/>
         <item id="style" href="styles.css" media-type="text/css"/>
         <item id="cover-image" href="images/cover.jpg" media-type="image/jpeg" properties="cover-image"/>
+
+        <!-- One item per section -->
+        <xsl:for-each select="body/section">
+          <xsl:variable name="index" select="position()" />
+          <item>
+            <xsl:attribute name="id">sec<xsl:value-of select="$index"/></xsl:attribute>
+            <xsl:attribute name="href">section-<xsl:value-of select="$index"/>.xhtml</xsl:attribute>
+            <xsl:attribute name="media-type">application/xhtml+xml</xsl:attribute>
+          </item>
+        </xsl:for-each>
       </manifest>
 
       <spine toc="ncx">
-        <itemref idref="content"/>
+        <!-- One itemref per section -->
+        <xsl:for-each select="body/section">
+          <xsl:variable name="index" select="position()" />
+          <itemref idref="sec{$index}"/>
+        </xsl:for-each>
       </spine>
     </package>
   </xsl:template>

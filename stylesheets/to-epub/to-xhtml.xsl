@@ -18,6 +18,7 @@
         <xsl:for-each select="head/meta">
           <meta name="{@name}" content="{@content}" />
         </xsl:for-each>
+        <link rel="stylesheet" type="text/css" href="styles.css" />
       </head>
       <body>
         <xsl:apply-templates select="body/*"/>

@@ -15,9 +15,10 @@ DTD="$HOME/.doctype/dtd/document.dtd"
 
 STYLESHEETS="$HOME/.doctype/stylesheets"
 
-TO_META="$STYLESHEETS/to-epub/to-metadata.xsl"
+TO_META="$STYLESHEETS/to-epub/to-metadata-modular.xsl"
 TO_TOC="$STYLESHEETS/to-epub/to-toc.xsl"
 TO_XHTML="$STYLESHEETS/to-epub/to-xhtml.xsl"
+TO_XHTMLCHAPTER="$STYLESHEETS/to-epub/sect-to-xhtml.xsl"
 
 MIMETYPE_TEXT="application/epub+zip"
 
@@ -30,6 +31,17 @@ OPF_TEXT=$(cat << EOF
       media-type="application/oebps-package+xml"/>
   </rootfiles>
 </container>
+EOF
+)
+
+EPUB_CSS=$(cat << EOF
+p, li {
+  text-align: justify;
+}
+h1 {
+  page-break-before: always;
+  break-before: page;
+}
 EOF
 )
 
@@ -50,8 +62,24 @@ to-epub()
     # Temp dir to process it
     tempdir=$(mktemp -d)
 
+    # --- update
+
     # Generate text body
     xsltproc "$TO_XHTML" "$file" > "$tempdir/content.xhtml"
+
+    # Extract number of sections
+    count=$(xmllint --xpath 'count(//section)' "$file")
+
+    # Convert sections
+    for i in $(seq 1 $count); do
+      # Extract ith section as standalone XML (wrap with root element)
+      xmllint --xpath "//section[$i]" "$file" > "$tempdir/_section_${i}.xml"
+
+      # Transform section with xsltproc
+      xsltproc "$TO_XHTMLCHAPTER" "$tempdir/_section_${i}.xml" > "$tempdir/section-${i}.xhtml"
+    done
+
+    # --- end update
 
     # Generate TOC
     xsltproc "$TO_TOC" "$file" > "$tempdir/toc.xhtml"
@@ -67,12 +95,20 @@ to-epub()
     # Create directory tree
     mkdir "$bookdir"/META-INF && echo 'creating temp folder META-INF'
     mkdir "$bookdir"/OEBPS && echo 'creating temp folder OEBPS'
-    
+
     # Move files to the right places
-    mv -v "$tempdir/content.xhtml" "$bookdir"/OEBPS
+    mv -v "$tempdir"/*.xhtml "$bookdir"/OEBPS
     mv -v "$tempdir/toc.xhtml" "$bookdir"/OEBPS
     mv -v "$tempdir/content.opf" "$bookdir"/OEBPS
 
+    # Create CSS file
+    echo "$EPUB_CSS" >> "$bookdir"/OEBPS/styles.css
+
+    # Create cover 
+    mkdir "$bookdir"/OEBPS/images
+    convert -size 1600x2560 canvas:gray "$bookdir"/OEBPS/images/cover.jpg && echo 'Cover generated.'
+
+    # Generate OPF container
     echo "$OPF_TEXT" > "$bookdir"/META-INF/container.xml
 
     # Compress file
