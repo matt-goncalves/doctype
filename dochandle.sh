@@ -23,5 +23,6 @@ SCRIPTS_PATH="$HOME"/.doctype/scripts
 # === NodeJS-based Scripts (callers) === #
 smarten()
 {
-  node "$SCRIPTS_PATH"/smarten/index.js # Smartens quotes and such
+  echo "Smarten's current implementation is broken. Skipping." 2> e_smarten_$(timestamp -t)
+  return
 }
