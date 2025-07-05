@@ -1,0 +1,92 @@
+#!/usr/bin/env bash
+
+# === Documentation === #
+#
+# This script uses my doctype standard, stylesheets, and bash automation to
+# generate an epub file from a new document. It requires zip, xsltproc, xmllint,
+# and basic unix tools to perform this task. Ideally, used with documents that
+# have rich metadata fields.
+#
+# Saturday, July  5, 2025. 01:46 PM
+#
+# === === #
+
+DTD="$HOME/.doctype/dtd/document.dtd"
+
+STYLESHEETS="$HOME/.doctype/stylesheets"
+
+TO_META="$STYLESHEETS/to-epub/to-metadata.xsl"
+TO_TOC="$STYLESHEETS/to-epub/to-toc.xsl"
+TO_XHTML="$STYLESHEETS/to-epub/to-xhtml.xsl"
+
+MIMETYPE_TEXT="application/epub+zip"
+
+OPF_TEXT=$(cat << EOF
+<?xml version="1.0"?>
+<container version="1.0" 
+  xmlns="urn:oasis:names:tc:opendocument:xmlns:container">
+  <rootfiles>
+    <rootfile full-path="OEBPS/content.opf"
+      media-type="application/oebps-package+xml"/>
+  </rootfiles>
+</container>
+EOF
+)
+
+to-epub()
+{
+
+  for file  in "$@"; do
+
+    # Get output path to transfer the epub file (full path)
+    outdir="$(realpath $(dirname "$file"))"
+
+    # Validate before running
+    xmllint --dtdvalid "$DTD" --noout "$file" || { echo "File ${file} is not valid." >&2 ; return 1; }
+
+    # Extract title
+    book_title=$(xmllint --xpath '//head/title/text()' "$file")
+
+    # Temp dir to process it
+    tempdir=$(mktemp -d)
+
+    # Generate text body
+    xsltproc "$TO_XHTML" "$file" > "$tempdir/content.xhtml"
+
+    # Generate TOC
+    xsltproc "$TO_TOC" "$file" > "$tempdir/toc.xhtml"
+
+    # Generate metadata
+    xsltproc "$TO_META" "$file" > "$tempdir/content.opf"
+
+    # Create book directory
+    bookdir="${tempdir}/${book_title}"
+
+    mkdir "$bookdir"
+
+    # Create directory tree
+    mkdir "$bookdir"/META-INF && echo 'creating temp folder META-INF'
+    mkdir "$bookdir"/OEBPS && echo 'creating temp folder OEBPS'
+    
+    # Move files to the right places
+    mv -v "$tempdir/content.xhtml" "$bookdir"/OEBPS
+    mv -v "$tempdir/toc.xhtml" "$bookdir"/OEBPS
+    mv -v "$tempdir/content.opf" "$bookdir"/OEBPS
+
+    echo "$OPF_TEXT" > "$bookdir"/META-INF/container.xml
+
+    # Compress file
+    (
+      cd "$bookdir" || { echo "Bookdir not found." >&2 ; return 1; }
+
+      # Create mimetype file if missing, ensure no trailing newline
+      echo -n "$MIMETYPE_TEXT" > mimetype
+
+      # Step 1: Add mimetype uncompressed at start
+      zip -X0 "${outdir}/${book_title}.epub" mimetype && echo "Mimetype file zipped."
+
+      # Step 2: Add rest with compression
+      zip -Xur9D "${outdir}/${book_title}.epub" META-INF OEBPS && echo "META-INF and OEBPS zipped."
+    )
+  done
+}
