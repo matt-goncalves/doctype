@@ -28,7 +28,14 @@
 
   <!-- ========== Paragraphs ========== -->
   <xsl:template match="par">
-    <p><xsl:apply-templates/></p>
+    <p>
+      <xsl:if test="@type">
+        <xsl:attribute name="class">
+          <xsl:value-of select="@type"/>
+        </xsl:attribute>
+      </xsl:if>
+      <xsl:apply-templates/>
+    </p>
   </xsl:template>
 
   <!-- ========== Emphasis ========== -->

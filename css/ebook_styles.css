@@ -1,0 +1,151 @@
+.occult {
+  display: none;
+}
+
+/* Author picture at the end */
+#about-the-author img {
+  display: block;
+  margin: 0 auto;
+  max-width: 200px;
+}
+
+/* Drop caps for paragraphs */
+.drop-cap {
+  font-size:4rem;
+  float:left;
+  margin-right:2%;
+  line-height:1;
+}
+
+.first-paragraph {
+  text-indent: none;
+}
+
+/* === === === */
+
+/* === Body Elements === */ 
+h1 {
+  font-size: 1.3rem;
+  margin-top: 0;
+  margin-bottom: 3rem;
+  text-align: center;
+}
+
+h2 {
+  font-size: 1.1rem;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+  text-align: left;
+}
+
+h3 {
+  font-size: 1.1rem;
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
+  text-align: left;
+}
+
+h4 {
+  font-weight: normal;
+  font-size: 1.1rem;
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
+  text-align: left;
+}
+
+h5 {
+  font-weight: normal;
+  font-size: 1rem;
+  margin-top: 1.2rem;
+  margin-bottom: 1.2rem;
+  text-align: left;
+  font-style: italic;
+}
+
+p, li {
+  text-align: justify;
+  text-indent: 3%;
+}
+
+hr {
+  border-top: 1px solid #a6a6a6;
+  border-bottom: 0;
+}
+
+img {
+  display: block;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  width: 100%;
+}
+
+.blockquote {
+  margin-left: 2%;
+  padding-left: 2%;
+  border-left: 2px solid gray;
+  font-style: italic;
+  font-size: .9rem;
+}
+
+.cite {
+  font-style: italic;
+}
+
+a {
+  text-transform: underline;
+}
+
+/* === Title Page === */
+
+/* Main container centers content vertically and horizontally */
+.container {
+  max-width: 90%;
+  margin: 0 auto;
+  padding: 2em;
+  text-align: center;
+  font-family: "Georgia", serif;
+  line-height: 1.6;
+}
+
+/* Book Title */
+.book-title {
+  font-size: 2.5em;
+  font-weight: bold;
+  margin: 1em 0 0.5em 0;
+}
+
+/* Subtitle */
+.book-subtitle {
+  font-size: 1.5em;
+  font-style: italic;
+  margin: 0.25em 0 1em 0;
+  color: #444;
+}
+
+/* "by" line before author name */
+.book-by {
+  font-size: 1em;
+  margin: 1em 0 0.25em 0;
+  color: #666;
+}
+
+/* Author Name */
+.book-author {
+  font-size: 1.2em;
+  font-weight: normal;
+  margin-bottom: 1.5em;
+}
+
+/* Copyright info */
+.copyright-info {
+  font-size: 0.9em;
+  margin-top: 2em;
+  color: #888;
+}
+
+/* Publisher info */
+.publisher-info {
+  font-size: 0.9em;
+  margin-top: 1em;
+  color: #888;
+}

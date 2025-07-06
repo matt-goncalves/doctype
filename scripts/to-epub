@@ -18,7 +18,7 @@ STYLESHEETS="$HOME/.doctype/stylesheets"
 TO_META="$STYLESHEETS/to-epub/to-metadata-modular.xsl"
 TO_TOC="$STYLESHEETS/to-epub/to-toc.xsl"
 TO_XHTMLCHAPTER="$STYLESHEETS/to-epub/sect-to-xhtml.xsl"
-TO_COVERPAGE="$STYLESHEETS/to-epub/to-coverpage.xsl"
+TO_TITLEPAGE="$STYLESHEETS/to-epub/to-coverpage.xsl"
 
 MIMETYPE_TEXT="application/epub+zip"
 
@@ -34,16 +34,7 @@ OPF_TEXT=$(cat << EOF
 EOF
 )
 
-EPUB_CSS=$(cat << EOF
-p, li {
-  text-align: justify;
-}
-h1 {
-  page-break-before: always;
-  break-before: page;
-}
-EOF
-)
+EPUB_CSS="$HOME/.doctype/css/ebook_styles.css"
 
 to-epub()
 {
@@ -62,26 +53,30 @@ to-epub()
     # Temp dir to process it
     tempdir=$(mktemp -d)
 
-    # Extract number of sections
+    # Get number of sections
     count=$(xmllint --xpath 'count(//section)' "$file")
 
-    # Convert sections
-    for i in $(seq 1 $count); do
-      # Extract ith section as standalone XML (wrap with root element)
-      xmllint --xpath "//section[$i]" "$file" > "$tempdir/_section_${i}.xml"
+    # Convert sections from xml to xhtml, each as a standalone file
+    {
+      for i in $(seq 1 $count); do
+        # Extract ith section as standalone XML (wrap with root element)
+        xmllint --xpath "//section[$i]" "$file" > "$tempdir/_section_${i}.xml";
 
-      # Transform section with xsltproc
-      xsltproc "$TO_XHTMLCHAPTER" "$tempdir/_section_${i}.xml" > "$tempdir/section-${i}.xhtml"
-    done
+        # Transform section with xsltproc
+        xsltproc "$TO_XHTMLCHAPTER" "$tempdir/_section_${i}.xml" > "$tempdir/section-${i}.xhtml";
+      done
+    } && echo "Source file converted into xhtml modules."
 
     # Generate TOC
-    xsltproc "$TO_TOC" "$file" > "$tempdir/toc.xhtml"
+    {
+      xsltproc "$TO_TOC" "$file" > "$tempdir/toc.xhtml";
 
-    # Generate metadata
-    xsltproc "$TO_META" "$file" > "$tempdir/content.opf"
+      # Generate metadata
+      xsltproc "$TO_META" "$file" > "$tempdir/content.opf";
 
-    # Generate coverpage
-    xsltproc "$TO_COVERPAGE" "$file" > "$tempdir"/cover-page.xhtml || echo "Creating coverpage failed."
+      # Generate coverpage
+      xsltproc "$TO_TITLEPAGE" "$file" > "$tempdir"/title-page.xhtml
+    } && echo "Generated complementary files."
 
     # Create book directory
     bookdir="${tempdir}/${book_title}"
@@ -93,15 +88,21 @@ to-epub()
     mkdir "$bookdir"/OEBPS && echo 'creating temp folder OEBPS'
 
     # Move files to the right places
-    mv -v "$tempdir"/*.xhtml "$bookdir"/OEBPS
-    mv -v "$tempdir/content.opf" "$bookdir"/OEBPS
+    {
+      mv "$tempdir"/*.xhtml "$bookdir"/OEBPS;
+      mv "$tempdir/content.opf" "$bookdir"/OEBPS;
+    } && echo "Chapters and content.opf added to OEBPS/"
 
     # Create CSS file
-    echo "$EPUB_CSS" >> "$bookdir"/OEBPS/styles.css
+    {
+      cat "$EPUB_CSS" >> "$bookdir"/OEBPS/styles.css;
+    } && echo "CSS file added."
 
     # Create cover 
-    mkdir "$bookdir"/OEBPS/images
-    convert -size 1600x2560 canvas:gray "$bookdir"/OEBPS/images/cover.jpg && echo 'Cover generated.'
+    {
+      mkdir "$bookdir"/OEBPS/images;
+      convert -size 1600x2560 canvas:gray "$bookdir"/OEBPS/images/cover.jpg;
+    } && echo "Cover created."
 
     # Generate OPF container
     echo "$OPF_TEXT" > "$bookdir"/META-INF/container.xml

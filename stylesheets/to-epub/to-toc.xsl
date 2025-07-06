@@ -22,12 +22,12 @@
 
       <navMap>
 
-        <!-- hard-coded insert of the cover-page file -->
-        <navPoint id="cover" playOrder="0">
+        <!-- hard-coded insert of the title-page file -->
+        <navPoint id="title-page" playOrder="0">
           <navLabel>
-            <text>Cover</text>
+            <text>Title Page</text>
           </navLabel>
-          <content src="cover-page.xhtml"/>
+          <content src="title-page.xhtml"/>
         </navPoint>
 
         <!-- dynamic insertion of chapters -->

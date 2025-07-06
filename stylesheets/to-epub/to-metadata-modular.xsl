@@ -35,8 +35,8 @@
         <item id="style" href="styles.css" media-type="text/css"/>
         <item id="cover-image" href="images/cover.jpg" media-type="image/jpeg" properties="cover-image"/>
 
-        <!-- hard-coded cover page (frontmatter) -->
-        <item id="cover-page" href="cover-page.xhtml" media-type="application/xhtml+xml"/>
+        <!-- hard-coded title page (frontmatter) -->
+        <item id="title-page" href="title-page.xhtml" media-type="application/xhtml+xml"/>
 
         <!-- One item per section -->
         <xsl:for-each select="body/section">
@@ -51,8 +51,8 @@
 
       <spine toc="ncx">
 
-        <!-- hard-coded cover page frontmatter -->
-        <itemref idref="cover-page" />
+        <!-- hard-coded title page frontmatter -->
+        <itemref idref="title-page" />
 
         <!-- One itemref per section -->
         <xsl:for-each select="body/section">
