@@ -74,7 +74,7 @@ to-epub()
       # Generate metadata
       xsltproc "$TO_META" "$file" > "$tempdir/content.opf";
 
-      # Generate coverpage
+      # Generate title page
       xsltproc "$TO_TITLEPAGE" "$file" > "$tempdir"/title-page.xhtml
     } && echo "Generated complementary files."
 
@@ -98,10 +98,20 @@ to-epub()
       cat "$EPUB_CSS" >> "$bookdir"/OEBPS/styles.css;
     } && echo "CSS file added."
 
-    # Create cover 
+    # Prepare cover---use blank if no cover is referenced
     {
-      mkdir "$bookdir"/OEBPS/images;
-      convert -size 1600x2560 canvas:gray "$bookdir"/OEBPS/images/cover.jpg;
+      mkdir -p "$bookdir"/OEBPS/images
+
+      cover_image=$(xmllint --xpath 'string(/document/head/meta[@name="cover"]/@content)' "$file")
+      [[ "$cover_image" != /* ]] && cover_image="$(dirname "$file")/$cover_image"
+
+      if [[ -f "$cover_image" ]]; then
+        cp "$cover_image" "$bookdir"/OEBPS/images && echo "Cover image added."
+      else
+        echo "Warning: Cover image '$cover_image' not found. Generating blank."
+        convert -size 1600x2560 canvas:gray "$bookdir"/OEBPS/images/cover.jpg
+      fi
+
     } && echo "Cover created."
 
     # Generate OPF container
