@@ -20,6 +20,7 @@ SCRIPTS_PATH="$HOME"/.doctype/scripts
 . "$SCRIPTS_PATH"/valid    # Validates against DTD
 . "$SCRIPTS_PATH"/meta     # Extracts metadata as YML
 . "$SCRIPTS_PATH"/prev     # Previews document - Firefox
+. "$SCRIPTS_PATH"/new-doc  # Creates a new document file with boilerplate
 
 # === NodeJS-based Scripts (callers) === #
 smarten()

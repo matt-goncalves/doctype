@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+new-doc()
+{
+
+  date=$(timestamp -t)
+  title="$1"
+
+  boilerplate=$(cat << EOF
+<document>
+
+<head>
+  <title>${title%\.xml}</title>
+  <meta name="date" content="${date}" />
+</head>
+
+<body>
+
+<!-- start here -->
+
+</body>
+</document>
+EOF
+)
+  echo "$boilerplate" > "$title"
+  echo "File ${title} was created."
+}

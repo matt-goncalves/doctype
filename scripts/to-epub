@@ -44,23 +44,27 @@ to-epub()
     # Get output path to transfer the epub file (full path)
     outdir="$(realpath $(dirname "$file"))"
 
+    # Run XInclude
+    source_file="$outdir"/source_file.xml
+    xmllint --xinclude --encode utf8 "$file" > "$source_file" && echo "XInclude parsing successful."
+
     # Validate before running
-    xmllint --dtdvalid "$DTD" --noout "$file" || { echo "File ${file} is not valid." >&2 ; return 1; }
+    xmllint --dtdvalid "$DTD" --noout "$source_file" || { echo "File ${file} is not valid." >&2 ; return 1; }
 
     # Extract title
-    book_title=$(xmllint --xpath '//head/title/text()' "$file")
+    book_title=$(xmllint --xpath '//head/title/text()' "$source_file")
 
     # Temp dir to process it
     tempdir=$(mktemp -d)
 
     # Get number of sections
-    count=$(xmllint --xpath 'count(//section)' "$file")
+    count=$(xmllint --xpath 'count(//section)' "$source_file")
 
     # Convert sections from xml to xhtml, each as a standalone file
     {
       for i in $(seq 1 $count); do
         # Extract ith section as standalone XML (wrap with root element)
-        xmllint --xpath "//section[$i]" "$file" > "$tempdir/_section_${i}.xml";
+        xmllint --xpath "//section[$i]" "$source_file" > "$tempdir/_section_${i}.xml";
 
         # Transform section with xsltproc
         xsltproc "$TO_XHTMLCHAPTER" "$tempdir/_section_${i}.xml" > "$tempdir/section-${i}.xhtml";
@@ -69,13 +73,13 @@ to-epub()
 
     # Generate TOC
     {
-      xsltproc "$TO_TOC" "$file" > "$tempdir/toc.xhtml";
+      xsltproc "$TO_TOC" "$source_file" > "$tempdir/toc.xhtml";
 
       # Generate metadata
-      xsltproc "$TO_META" "$file" > "$tempdir/content.opf";
+      xsltproc "$TO_META" "$source_file" > "$tempdir/content.opf";
 
       # Generate title page
-      xsltproc "$TO_TITLEPAGE" "$file" > "$tempdir"/title-page.xhtml
+      xsltproc "$TO_TITLEPAGE" "$source_file" > "$tempdir"/title-page.xhtml
     } && echo "Generated complementary files."
 
     # Create book directory

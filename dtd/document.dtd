@@ -52,6 +52,7 @@
 <!ELEMENT section (title, (%block;)*)>
 <!ATTLIST section
   xmlns:xi CDATA #IMPLIED
+  xml:id   ID    #IMPLIED
   xml:base CDATA #IMPLIED>
 
 <!-- ========= List and Items ========= -->
